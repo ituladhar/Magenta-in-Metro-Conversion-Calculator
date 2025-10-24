@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiM BAN Conversion Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* FIX: Ensures the body and html take up the full available vertical space within the iframe */
+        html, body { 
+            height: 100%; 
+            min-height: 100vh; /* Ensures minimum vertical space on small screens */
+            font-family: 'Inter', sans-serif; 
+            background-color: #f7f9fb; 
+        }
+        .input-card { transition: all 0.3s ease; }
+        /* Changed focus color to Magenta (pink-500) */
+        .input-card:focus-within { box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.1), 0 4px 6px -2px rgba(236, 72, 153, 0.05); }
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="p-4">
+    <!-- UPDATED: Added mx-auto to center the content block horizontally and removed vertical margin (my-8) -->
+    <div class="w-full max-w-4xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-10">
+        <!-- Header Section (Centered) -->
+        <header class="mb-8 border-b pb-4 text-center">
+            <h1 class="text-3xl font-bold text-pink-700">Magenta in Metro Conversion Calculator</h1>
+            <p class="text-gray-500 mt-1">Estimate your compensation potential by adjusting key performance metrics.</p>
+        </header>
+
+        <!-- FIX: Changed grid behavior. The grid is now 1 column by default (mobile) and stacks correctly. 
+             It only becomes 3 columns on large screens (lg). -->
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 1. Input Panel: Compensation Drivers -->
+            <div class="lg:col-span-1 bg-gray-50 p-6 rounded-xl shadow-inner">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Compensation Drivers</h2>
+                
+                <!-- Date Range Inputs -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <!-- Date From -->
+                    <div>
+                        <label for="dateFrom" class="block text-sm font-medium text-gray-700">Date From</label>
+                        <input type="date" id="dateFrom" value="2025-06-01"
+                            class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
+                    </div>
+                    <!-- Date To -->
+                    <div>
+                        <label for="dateTo" class="block text-sm font-medium text-gray-700">Date To</label>
+                        <input type="date" id="dateTo" value="2025-06-21"
+                            class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
+                    </div>
+                </div>
+
+                <!-- Input Group: Total MiM Eligibility -->
+                <div class="mb-4">
+                    <label for="totalMimEligibility" class="block text-sm font-medium text-gray-700">Total MiM Eligibility</label>
+                    <div class="mt-1 relative input-card">
+                        <input type="number" id="totalMimEligibility" value="80" step="1" min="0" 
+                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                        <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">Activations</span>
+                    </div>
+                </div>
+
+                <!-- Input Group: Avg. MiM Conv. per migrated account (2.3) -->
+                <div class="mb-4">
+                    <label for="linesPerBan" class="block text-sm font-medium text-gray-700">Avg. MiM Conv. per migrated account (2.3)</label>
+                    <input type="number" id="linesPerBan" value="2.3" step="0.1" min="0" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
+                </div>
+
+                <!-- Input Group: MiM % Conversion (The variable you control) -->
+                <div class="mb-4">
+                    <label for="mimConversionRate" class="block text-sm font-medium text-gray-700">Current Eligible BAN Conversion %</label>
+                    <div class="mt-1 relative input-card">
+                        <input type="number" id="mimConversionRate" value="13.24" step="0.01" min="0" max="100" 
+                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                        <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">%</span>
+                    </div>
+                </div>
+
+                <h3 class="text-md font-medium mt-6 mb-3 text-gray-800">Compensation Multipliers</h3>
+
+                <!-- Input Group: Rate Plan Value -->
+                <div class="mb-4">
+                    <label for="ratePlanValue" class="block text-sm font-medium text-gray-700">Rate Plan Value $47/line dealer payout (multiline)</label>
+                    <div class="mt-1 relative input-card">
+                        <input type="number" id="ratePlanValue" value="47" step="1" min="0" 
+                               class="w-full pl-6 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                        <span class="absolute left-0 top-0 mt-2 ml-3 text-gray-500 text-sm">$</span>
+                    </div>
+                </div>
+
+                <!-- Input Group: Dealer Compensation Multiplier -->
+                <div class="mb-4">
+                    <label for="dealerCompensationMultiplier" class="block text-sm font-medium text-gray-700">Standard Dealer Compensation</label>
+                    <div class="mt-1 relative input-card">
+                        <input type="number" id="dealerCompensationMultiplier" value="125" step="1" min="0" 
+                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                        <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">%</span>
+                    </div>
+                </div>
+
+                <!-- Input Group: Residual Multiplier (Disabled as it's a constant input) -->
+                <div class="mb-4">
+                    <label for="residualMultiplier" class="block text-sm font-medium text-gray-700">Residual (upto 23 months)</label>
+                    <div class="mt-1 relative input-card">
+                        <input type="number" id="residualMultiplier" value="3" step="0.01" min="0" 
+                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500" disabled>
+                        <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Output Panel: Metrics and Compensation -->
+            <div class="lg:col-span-2">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Calculated Results</h2>
+
+                <!-- Total Compensation (Highlighting Green for Profit) -->
+                <div class="bg-green-100 p-6 rounded-xl shadow-md mb-6 border-l-4 border-green-500">
+                    <p class="text-lg font-medium text-green-700">Total Compensation</p>
+                    <div class="flex items-center justify-between mt-1">
+                        <span id="totalCompensation" class="text-4xl font-extrabold text-green-800">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Metric 1: # BAN (Whole Number) -->
+                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                        <p class="text-sm font-medium text-gray-500"># BAN Conversions</p>
+                        <p id="numBans" class="text-2xl font-bold text-gray-800 mt-1">0</p>
+                    </div>
+
+                    <!-- Metric 2: # of Lines (Whole Number) -->
+                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                        <p class="text-sm font-medium text-gray-500"># of Lines Activated</p>
+                        <p id="numLines" class="text-2xl font-bold text-gray-800 mt-1">0</p>
+                    </div>
+
+                    <!-- Metric 3: Activation Comp -->
+                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                        <p class="text-sm font-medium text-gray-500">Activation Comp $ Earned</p>
+                        <p id="activationComp" class="text-2xl font-bold text-green-600 mt-1">$0.00</p>
+                    </div>
+
+                    <!-- Metric 4: Residual $ Amount -->
+                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                        <p class="text-sm font-medium text-gray-500">Residual $ Amount</p>
+                        <p id="residualAmount" class="text-2xl font-bold text-green-600 mt-1">$0.00</p>
+                    </div>
+                </div>
+
+                <!-- Potential Opportunity Section (Green for Profit) -->
+                <div class="mt-8">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Potential Opportunity Analysis</h2>
+                    <!-- FIX: On mobile, change grid-cols-3 to grid-cols-1 or grid-cols-2. 
+                         I'm using grid-cols-2 (default) and md:grid-cols-3 for better mobile density. -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- 10% Scenario -->
+                        <div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center">
+                            <p class="text-sm font-medium text-green-700">10% Conversion</p>
+                            <p id="opp10" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
+                        </div>
+                        <!-- 15% Scenario -->
+                        <div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center">
+                            <p class="text-sm font-medium text-green-700">15% Conversion</p>
+                            <p id="opp15" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
+                        </div>
+                        <!-- 20% Scenario -->
+                        <div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center">
+                            <p class="text-sm font-medium text-green-700">20% Conversion</p>
+                            <p id="opp20" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Disclaimer Note -->
+                <div class="mt-8 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg">
+                    <p class="text-sm font-semibold text-yellow-800">Disclaimer Note:</p>
+                    <p class="text-xs text-yellow-700 mt-1">
+                        This calculator provides an <strong class="font-bold">estimate</strong> of potential compensation based on the inputs provided and historical compensation factors. <strong class="font-bold">Actual earnings may vary</strong> and are subject to final audit, official compensation plans, and policy changes. This tool is for informational and planning purposes only and does not constitute a guarantee of income.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Constants
+        // Derived factor used to calculate Residual $ Amount from Activation Comp $ (790.04 / 1431.24)
+        const RESIDUAL_FACTOR = 0.55200378; 
+        
+        // Element references
+        const elements = {
+            totalMimEligibility: document.getElementById('totalMimEligibility'),
+            linesPerBan: document.getElementById('linesPerBan'),
+            ratePlanValue: document.getElementById('ratePlanValue'),
+            dealerCompensationMultiplier: document.getElementById('dealerCompensationMultiplier'),
+            mimConversionRate: document.getElementById('mimConversionRate'),
+            
+            numBans: document.getElementById('numBans'),
+            numLines: document.getElementById('numLines'),
+            activationComp: document.getElementById('activationComp'),
+            residualAmount: document.getElementById('residualAmount'),
+            totalCompensation: document.getElementById('totalCompensation'),
+
+            // Opportunity elements
+            opp10: document.getElementById('opp10'),
+            opp15: document.getElementById('opp15'),
+            opp20: document.getElementById('opp20'),
+        };
+
+        // Helper function for currency formatting
+        const formatCurrency = (amount) => new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
+
+        // Function to safely get inputs, converting all percentage inputs to multipliers
+        function getInputs() {
+            // Get percentage values
+            const dealerCompPercentage = parseFloat(elements.dealerCompensationMultiplier.value) || 0;
+            const mimConversionPercentage = parseFloat(elements.mimConversionRate.value) || 0;
+            
+            return {
+                totalMimEligibility: parseFloat(elements.totalMimEligibility.value) || 0,
+                linesPerBan: parseFloat(elements.linesPerBan.value) || 0,
+                ratePlanValue: parseFloat(elements.ratePlanValue.value) || 0,
+                // CONVERSION: Standard Dealer Compensation (e.g., 125) must be divided by 100 (1.25)
+                dealerCompensationMultiplier: dealerCompPercentage / 100,
+                // CONVERSION: Current Eligible BAN Conversion (e.g., 13.24) must be divided by 100 (0.1324)
+                mimConversionRate: mimConversionPercentage / 100, 
+            };
+        }
+
+
+        // Function to calculate compensation for any given conversion rate (as a decimal), using the current inputs
+        function calculateOpportunityCompensation(conversionRate, inputs) {
+            const safeConversionRate = Math.min(1.0, Math.max(0, conversionRate));
+
+            const numBans = inputs.totalMimEligibility * safeConversionRate;
+            const numLines = numBans * inputs.linesPerBan;
+            
+            // Activation Comp $ = # of Lines * Rate Plan Value * Dealer Compensation Multiplier
+            const activationComp = numLines * inputs.ratePlanValue * inputs.dealerCompensationMultiplier;
+            
+            // Residual $ Amount = Activation Comp $ * Fixed Residual Factor 
+            const residualAmount = activationComp * RESIDUAL_FACTOR; 
+            
+            return activationComp + residualAmount;
+        }
+
+        // Main calculation function
+        function calculateCompensation() {
+            // 1. Get Inputs (Safely parsed and converted to decimals/multipliers)
+            const inputs = getInputs();
+            
+            // Limit current conversion rate to 100% (1.0)
+            const safeConversionRate = Math.min(1.0, Math.max(0, inputs.mimConversionRate));
+
+            // 2. Calculate Current Metrics and Compensation
+            const numBans = inputs.totalMimEligibility * safeConversionRate;
+            const numLines = numBans * inputs.linesPerBan;
+            const activationComp = numLines * inputs.ratePlanValue * inputs.dealerCompensationMultiplier;
+            const residualAmount = activationComp * RESIDUAL_FACTOR; 
+            const totalCompensation = activationComp + residualAmount;
+
+            // 3. Update Current UI
+            // UPDATED: Rounding to the nearest whole number and displaying as an integer
+            elements.numBans.textContent = Math.round(numBans).toFixed(0);
+            elements.numLines.textContent = Math.round(numLines).toFixed(0); 
+            elements.activationComp.textContent = formatCurrency(activationComp);
+            elements.residualAmount.textContent = formatCurrency(residualAmount);
+            elements.totalCompensation.textContent = formatCurrency(totalCompensation);
+
+            // 4. Calculate and Update Opportunity Scenarios (0.10, 0.15, 0.20 are the decimal multipliers)
+            const opp10Comp = calculateOpportunityCompensation(0.10, inputs);
+            const opp15Comp = calculateOpportunityCompensation(0.15, inputs);
+            const opp20Comp = calculateOpportunityCompensation(0.20, inputs);
+
+            elements.opp10.textContent = formatCurrency(opp10Comp);
+            elements.opp15.textContent = formatCurrency(opp15Comp);
+            elements.opp20.textContent = formatCurrency(opp20Comp);
+        }
+
+        // Add event listeners to all input fields
+        Object.values(elements).forEach(inputElement => {
+            if (inputElement && inputElement.tagName === 'INPUT') {
+                inputElement.addEventListener('input', calculateCompensation);
+            }
+        });
+
+        // Initial calculation on load to display default values
+        calculateCompensation();
+    </script>
+</body>
+</html>
