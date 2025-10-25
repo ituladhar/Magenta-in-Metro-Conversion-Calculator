@@ -42,27 +42,7 @@ $$\text{Total Compensation} = \text{Activation Comp \$ Earned} + \text{Residual 
 
 Note on Residual Factor: The Residual calculation relies on a fixed empirical factor (0.55200378). This value was derived from the proportional relationship between the Activation Comp and Residual values in the source spreadsheet data, ensuring the calculation accurately reflects the original model.
 
-🚀 Deployment Methods
 
-Since the application is a single index.html file, it can be hosted using various standard web services.
-
-Option 1: GitHub Pages (Recommended for Hosting)
-
-Ensure the file is explicitly named index.html.
-
-Upload index.html to the root directory of your GitHub repository.
-
-Navigate to Settings > Pages and configure the source to the main branch (or master) and the folder to / (root).
-
-The application will be live at a URL such as yourusername.github.io/repository-name/.
-
-Option 2: Embedding via Google Sites
-
-Copy the entire content of the index.html file.
-
-In the Google Site editor, use the Insert > Embed > Embed code feature.
-
-Paste the HTML code and adjust the frame dimensions to ensure full visibility.
 
 ⚠️ Important Disclaimer
 
