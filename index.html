@@ -28,10 +28,15 @@
             transform: scale(1.03); /* Slightly zoom in */
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Add a larger shadow */
         }
+        
+        /* NEW: Translucent background for the main card */
+        .translucent-card {
+            background-color: rgba(255, 255, 255, 0.5); /* White at 50% opacity */
+        }
     </style>
 </head>
 <body class="p-4">
-    <!-- UPDATED: Added mx-auto to center the content block horizontally and removed vertical margin (my-8) --><div class="w-full max-w-4xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-10">
+    <!-- UPDATED: Replaced bg-white with translucent-card class --><div class="w-full max-w-4xl mx-auto translucent-card shadow-2xl rounded-xl p-6 md:p-10">
         <!-- Header Section (Centered) --><header class="mb-8 border-b pb-4 text-center">
             <h1 class="text-3xl font-bold text-pink-700">Magenta in Metro Conversion Calculator</h1>
             <p class="text-gray-500 mt-1">Estimate your compensation potential by adjusting key performance metrics.</p>
@@ -66,20 +71,23 @@
 
                 <!-- Input Group: Avg. MiM Conv. per migrated account (2.3) -->
                 <div class="mb-4">
-                    <!-- UPDATED LABEL with styled span -->
-                    <label for="linesPerBan" class="block text-sm font-medium text-gray-700">
+                    <!-- UPDATED: Added data-tooltip-id and data-tooltip-message for custom tooltip -->
+                    <label for="linesPerBan" class="block text-sm font-medium text-gray-700" data-tooltip-id="linesPerBanInput">
                         Avg. MiM Conv. per migrated account 
                         <span class="italic font-semibold text-gray-600">(Standard: 2.3)</span>
                     </label>
                     <input type="number" id="linesPerBan" value="2.3" step="0.1" min="0" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card"
+                               data-tooltip-id="linesPerBanInput">
                 </div>
 
                 <!-- Input Group: MiM % Conversion (The variable you control) --><div class="mb-4">
-                    <label for="mimConversionRate" class="block text-sm font-medium text-gray-700">Current Eligible BAN Conversion %</label>
+                    <label for="mimConversionRate" class="block text-sm font-medium text-gray-700" data-tooltip-id="mimConversionRateInput">Current Eligible BAN Conversion %</label>
                     <div class="mt-1 relative input-card">
+                        <!-- UPDATED: Added data-tooltip-id for custom tooltip and removed native title attribute -->
                         <input type="number" id="mimConversionRate" value="13.24" step="0.01" min="0" max="100" 
-                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500"
+                               data-tooltip-id="mimConversionRateInput">
                         <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">%</span>
                     </div>
                 </div>
@@ -178,7 +186,12 @@
         </main>
     </div>
 
-    <!-- The original footer block has been removed --><script>
+    <!-- Custom Tooltip Element (Hidden by default, styled for large font) -->
+    <div id="customTooltip" 
+         class="fixed top-0 left-0 bg-gray-800 text-white p-3 rounded-lg shadow-xl pointer-events-none transition-opacity duration-150 opacity-0 z-50 text-lg max-w-xs text-left">
+    </div>
+
+    <script>
         // Constants
         // Derived factor used to calculate Residual $ Amount from Activation Comp $ (790.04 / 1431.24)
         const RESIDUAL_FACTOR = 0.55200378; 
@@ -196,11 +209,18 @@
             activationComp: document.getElementById('activationComp'),
             residualAmount: document.getElementById('residualAmount'),
             totalCompensation: document.getElementById('totalCompensation'),
+            customTooltip: document.getElementById('customTooltip'), // Reference to the new tooltip element
 
             // Opportunity elements
             opp10: document.getElementById('opp10'),
             opp15: document.getElementById('opp15'),
             opp20: document.getElementById('opp20'),
+        };
+
+        // Tooltip messages map
+        const tooltipMessages = {
+            linesPerBanInput: "Customers migrating to postpaid average 2.3 conversions per account. This represents the typical conversion rate during the migration process.",
+            mimConversionRateInput: "Refer to the current Eligible BAN Conversion % for each store in Power BI."
         };
 
         // Helper function for currency formatting
@@ -278,7 +298,41 @@
             elements.opp20.textContent = formatCurrency(opp20Comp);
         }
 
-        // Add event listeners to all input fields
+        // --- Custom Tooltip Logic ---
+        function showTooltip(e) {
+            const id = e.target.getAttribute('data-tooltip-id');
+            const tooltipContent = tooltipMessages[id];
+
+            if (tooltipContent) {
+                elements.customTooltip.textContent = tooltipContent;
+                elements.customTooltip.classList.remove('opacity-0');
+                elements.customTooltip.classList.add('opacity-100');
+            }
+            updateTooltipPosition(e);
+        }
+
+        function hideTooltip() {
+            elements.customTooltip.classList.remove('opacity-100');
+            elements.customTooltip.classList.add('opacity-0');
+        }
+
+        function updateTooltipPosition(e) {
+            // Position the tooltip 15px down and 15px to the right of the cursor
+            elements.customTooltip.style.left = `${e.pageX + 15}px`;
+            elements.customTooltip.style.top = `${e.pageY + 15}px`;
+        }
+
+        // Get all elements that need custom tooltips (labels and inputs)
+        const tooltipTargets = document.querySelectorAll('[data-tooltip-id]');
+
+        tooltipTargets.forEach(target => {
+            target.addEventListener('mouseenter', showTooltip);
+            target.addEventListener('mouseleave', hideTooltip);
+            target.addEventListener('mousemove', updateTooltipPosition);
+        });
+        // --- End Custom Tooltip Logic ---
+
+        // Add event listeners to all input fields for calculation
         Object.values(elements).forEach(inputElement => {
             if (inputElement && inputElement.tagName === 'INPUT') {
                 inputElement.addEventListener('input', calculateCompensation);
