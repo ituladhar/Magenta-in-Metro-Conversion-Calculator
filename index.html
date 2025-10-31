@@ -19,42 +19,43 @@
         .input-card:focus-within { box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.1), 0 4px 6px -2px rgba(236, 72, 153, 0.05); }
         input[type="number"]::-webkit-inner-spin-button, 
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+        /* New CSS for hover effect on opportunity cards */
+        .opportunity-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .opportunity-card:hover {
+            transform: scale(1.03); /* Slightly zoom in */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Add a larger shadow */
+        }
     </style>
 </head>
 <body class="p-4">
-    <!-- UPDATED: Added mx-auto to center the content block horizontally and removed vertical margin (my-8) -->
-    <div class="w-full max-w-4xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-10">
-        <!-- Header Section (Centered) -->
-        <header class="mb-8 border-b pb-4 text-center">
+    <!-- UPDATED: Added mx-auto to center the content block horizontally and removed vertical margin (my-8) --><div class="w-full max-w-4xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-10">
+        <!-- Header Section (Centered) --><header class="mb-8 border-b pb-4 text-center">
             <h1 class="text-3xl font-bold text-pink-700">Magenta in Metro Conversion Calculator</h1>
             <p class="text-gray-500 mt-1">Estimate your compensation potential by adjusting key performance metrics.</p>
         </header>
 
         <!-- FIX: Changed grid behavior. The grid is now 1 column by default (mobile) and stacks correctly. 
-              It only becomes 3 columns on large screens (lg). -->
-        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- 1. Input Panel: Compensation Drivers -->
-            <div class="lg:col-span-1 bg-gray-50 p-6 rounded-xl shadow-inner">
+              It only becomes 3 columns on large screens (lg). --><main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 1. Input Panel: Compensation Drivers --><div class="lg:col-span-1 bg-gray-50 p-6 rounded-xl shadow-inner">
                 <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Compensation Drivers</h2>
                 
-                <!-- Date Range Inputs -->
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <!-- Date From -->
-                    <div>
+                <!-- Date Range Inputs --><div class="grid grid-cols-2 gap-4 mb-6">
+                    <!-- Date From --><div>
                         <label for="dateFrom" class="block text-sm font-medium text-gray-700">Date From</label>
                         <input type="date" id="dateFrom" value="2025-06-01"
                             class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
                     </div>
-                    <!-- Date To -->
-                    <div>
+                    <!-- Date To --><div>
                         <label for="dateTo" class="block text-sm font-medium text-gray-700">Date To</label>
                         <input type="date" id="dateTo" value="2025-06-21"
                             class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
                     </div>
                 </div>
 
-                <!-- Input Group: Total MiM Eligibility -->
-                <div class="mb-4">
+                <!-- Input Group: Total MiM Eligibility --><div class="mb-4">
                     <label for="totalMimEligibility" class="block text-sm font-medium text-gray-700">Total MiM Eligibility</label>
                     <div class="mt-1 relative input-card">
                         <input type="number" id="totalMimEligibility" value="80" step="1" min="0" 
@@ -63,15 +64,13 @@
                     </div>
                 </div>
 
-                <!-- Input Group: Avg. MiM Conv. per migrated account (2.3) -->
-                <div class="mb-4">
+                <!-- Input Group: Avg. MiM Conv. per migrated account (2.3) --><div class="mb-4">
                     <label for="linesPerBan" class="block text-sm font-medium text-gray-700">Avg. MiM Conv. per migrated account (2.3)</label>
                     <input type="number" id="linesPerBan" value="2.3" step="0.1" min="0" 
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
                 </div>
 
-                <!-- Input Group: MiM % Conversion (The variable you control) -->
-                <div class="mb-4">
+                <!-- Input Group: MiM % Conversion (The variable you control) --><div class="mb-4">
                     <label for="mimConversionRate" class="block text-sm font-medium text-gray-700">Current Eligible BAN Conversion %</label>
                     <div class="mt-1 relative input-card">
                         <input type="number" id="mimConversionRate" value="13.24" step="0.01" min="0" max="100" 
@@ -82,8 +81,7 @@
 
                 <h3 class="text-md font-medium mt-6 mb-3 text-gray-800">Compensation Multipliers</h3>
 
-                <!-- Input Group: Rate Plan Value -->
-                <div class="mb-4">
+                <!-- Input Group: Rate Plan Value --><div class="mb-4">
                     <label for="ratePlanValue" class="block text-sm font-medium text-gray-700">Rate Plan Value $47/line dealer payout (multiline)</label>
                     <div class="mt-1 relative input-card">
                         <input type="number" id="ratePlanValue" value="47" step="1" min="0" 
@@ -92,8 +90,7 @@
                     </div>
                 </div>
 
-                <!-- Input Group: Dealer Compensation Multiplier -->
-                <div class="mb-4">
+                <!-- Input Group: Dealer Compensation Multiplier --><div class="mb-4">
                     <label for="dealerCompensationMultiplier" class="block text-sm font-medium text-gray-700">Standard Dealer Compensation</label>
                     <div class="mt-1 relative input-card">
                         <input type="number" id="dealerCompensationMultiplier" value="125" step="1" min="0" 
@@ -102,8 +99,7 @@
                     </div>
                 </div>
 
-                <!-- Input Group: Residual Multiplier (Disabled as it's a constant input) -->
-                <div class="mb-4">
+                <!-- Input Group: Residual Multiplier (Disabled as it's a constant input) --><div class="mb-4">
                     <label for="residualMultiplier" class="block text-sm font-medium text-gray-700">Residual (upto 23 months)</label>
                     <div class="mt-1 relative input-card">
                         <input type="number" id="residualMultiplier" value="3" step="0.01" min="0" 
@@ -113,12 +109,10 @@
                 </div>
             </div>
 
-            <!-- 2. Output Panel: Metrics and Compensation -->
-            <div class="lg:col-span-2">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Calculated Results</h2>
-
+            <!-- 2. Output Panel: Metrics and Compensation --><div class="lg:col-span-2">
                 <!-- Total Compensation (Highlighting Green for Profit) -->
-                <div class="bg-green-100 p-6 rounded-xl shadow-md mb-6 border-l-4 border-green-500">
+                <!-- ADDED: opportunity-card class for hover effect -->
+                <div class="bg-green-100 p-6 rounded-xl shadow-md mb-6 border-l-4 border-green-500 opportunity-card">
                     <p class="text-lg font-medium text-green-700">Total Compensation</p>
                     <div class="flex items-center justify-between mt-1">
                         <span id="totalCompensation" class="text-4xl font-extrabold text-green-800">$0.00</span>
@@ -126,64 +120,52 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Metric 1: # BAN (Whole Number) -->
-                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <!-- Metric 1: # BAN (Whole Number) --><div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
                         <p class="text-sm font-medium text-gray-500"># BAN Conversions</p>
                         <p id="numBans" class="text-2xl font-bold text-gray-800 mt-1">0</p>
                     </div>
 
-                    <!-- Metric 2: # of Lines (Whole Number) -->
-                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <!-- Metric 2: # of Lines (Whole Number) --><div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
                         <p class="text-sm font-medium text-gray-500"># of Lines Activated</p>
                         <p id="numLines" class="text-2xl font-bold text-gray-800 mt-1">0</p>
                     </div>
 
-                    <!-- Metric 3: Activation Comp -->
-                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <!-- Metric 3: Activation Comp --><div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
                         <p class="text-sm font-medium text-gray-500">Activation Comp $ Earned</p>
                         <p id="activationComp" class="text-2xl font-bold text-green-600 mt-1">$0.00</p>
                     </div>
 
-                    <!-- Metric 4: Residual $ Amount -->
-                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <!-- Metric 4: Residual $ Amount --><div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
                         <p class="text-sm font-medium text-gray-500">Residual $ Amount</p>
                         <p id="residualAmount" class="text-2xl font-bold text-green-600 mt-1">$0.00</p>
                     </div>
                 </div>
 
-                <!-- Potential Opportunity Section (Green for Profit) -->
-                <div class="mt-8">
+                <!-- Potential Opportunity Section (Green for Profit) --><div class="mt-8">
                     <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Potential Opportunity Analysis</h2>
                     <!-- FIX: On mobile, change grid-cols-3 to grid-cols-1 or grid-cols-2. 
-                          I'm using grid-cols-2 (default) and md:grid-cols-3 for better mobile density. -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        <!-- 10% Scenario -->
-                        <div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center">
+                          I'm using grid-cols-2 (default) and md:grid-cols-3 for better mobile density. --><div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- 10% Scenario - Added opportunity-card class --><div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center opportunity-card">
                             <p class="text-sm font-medium text-green-700">10% Conversion</p>
                             <p id="opp10" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
                         </div>
-                        <!-- 15% Scenario -->
-                        <div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center">
+                        <!-- 15% Scenario - Added opportunity-card class --><div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center opportunity-card">
                             <p class="text-sm font-medium text-green-700">15% Conversion</p>
                             <p id="opp15" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
                         </div>
-                        <!-- 20% Scenario -->
-                        <div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center">
+                        <!-- 20% Scenario - Added opportunity-card class --><div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center opportunity-card">
                             <p class="text-sm font-medium text-green-700">20% Conversion</p>
                             <p id="opp20" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Disclaimer Note (UPDATED to include creator credit) -->
-                <div class="mt-8 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg">
-                    <!-- CHANGED: Removed "Note" from the heading text -->
-                    <p class="text-sm font-semibold text-yellow-800">Disclaimer:</p>
+                <!-- Disclaimer Note (UPDATED to include creator credit) --><div class="mt-8 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg">
+                    <!-- CHANGED: Removed "Note" from the heading text --><p class="text-sm font-semibold text-yellow-800">Disclaimer:</p>
                     <p class="text-xs text-yellow-700 mt-1">
                         This calculator provides an <strong class="font-bold">estimate</strong> of potential compensation based on the inputs provided and historical compensation factors. <strong class="font-bold">Actual earnings may vary</strong> and are subject to final audit, official compensation plans, and policy changes. This tool is for informational and planning purposes only and does not constitute a guarantee of income.
                     </p>
-                    <!-- Creator Credit moved from footer and now uses text-right for right alignment -->
-                    <p class="text-xs text-right font-medium text-yellow-800 mt-3 pt-2 border-t border-yellow-300">
+                    <!-- Creator Credit moved from footer and now uses text-right for right alignment --><p class="text-xs text-right font-medium text-yellow-800 mt-3 pt-2 border-t border-yellow-300">
                         Created by Ishwor Tuladhar
                     </p>
                 </div>
@@ -191,9 +173,7 @@
         </main>
     </div>
 
-    <!-- The original footer block has been removed -->
-
-    <script>
+    <!-- The original footer block has been removed --><script>
         // Constants
         // Derived factor used to calculate Residual $ Amount from Activation Comp $ (790.04 / 1431.24)
         const RESIDUAL_FACTOR = 0.55200378; 
