@@ -31,7 +31,7 @@
         </header>
 
         <!-- FIX: Changed grid behavior. The grid is now 1 column by default (mobile) and stacks correctly. 
-             It only becomes 3 columns on large screens (lg). -->
+              It only becomes 3 columns on large screens (lg). -->
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- 1. Input Panel: Compensation Drivers -->
             <div class="lg:col-span-1 bg-gray-50 p-6 rounded-xl shadow-inner">
@@ -67,7 +67,7 @@
                 <div class="mb-4">
                     <label for="linesPerBan" class="block text-sm font-medium text-gray-700">Avg. MiM Conv. per migrated account (2.3)</label>
                     <input type="number" id="linesPerBan" value="2.3" step="0.1" min="0" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
                 </div>
 
                 <!-- Input Group: MiM % Conversion (The variable you control) -->
@@ -155,7 +155,7 @@
                 <div class="mt-8">
                     <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Potential Opportunity Analysis</h2>
                     <!-- FIX: On mobile, change grid-cols-3 to grid-cols-1 or grid-cols-2. 
-                         I'm using grid-cols-2 (default) and md:grid-cols-3 for better mobile density. -->
+                          I'm using grid-cols-2 (default) and md:grid-cols-3 for better mobile density. -->
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <!-- 10% Scenario -->
                         <div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center">
@@ -175,16 +175,23 @@
                     </div>
                 </div>
                 
-                <!-- Disclaimer Note -->
+                <!-- Disclaimer Note (UPDATED to include creator credit) -->
                 <div class="mt-8 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg">
-                    <p class="text-sm font-semibold text-yellow-800">Disclaimer Note:</p>
+                    <!-- CHANGED: Removed "Note" from the heading text -->
+                    <p class="text-sm font-semibold text-yellow-800">Disclaimer:</p>
                     <p class="text-xs text-yellow-700 mt-1">
                         This calculator provides an <strong class="font-bold">estimate</strong> of potential compensation based on the inputs provided and historical compensation factors. <strong class="font-bold">Actual earnings may vary</strong> and are subject to final audit, official compensation plans, and policy changes. This tool is for informational and planning purposes only and does not constitute a guarantee of income.
+                    </p>
+                    <!-- Creator Credit moved from footer and now uses text-right for right alignment -->
+                    <p class="text-xs text-right font-medium text-yellow-800 mt-3 pt-2 border-t border-yellow-300">
+                        Created by Ishwor Tuladhar
                     </p>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- The original footer block has been removed -->
 
     <script>
         // Constants
