@@ -51,7 +51,7 @@
                     <!-- Date To --><div>
                         <label for="dateTo" class="block text-sm font-medium text-gray-700">Date To</label>
                         <input type="date" id="dateTo" value="2025-06-21"
-                            class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
+                            class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:focus:ring-pink-500 input-card">
                     </div>
                 </div>
 
@@ -64,8 +64,13 @@
                     </div>
                 </div>
 
-                <!-- Input Group: Avg. MiM Conv. per migrated account (2.3) --><div class="mb-4">
-                    <label for="linesPerBan" class="block text-sm font-medium text-gray-700">Avg. MiM Conv. per migrated account (2.3)</label>
+                <!-- Input Group: Avg. MiM Conv. per migrated account (2.3) -->
+                <div class="mb-4">
+                    <!-- UPDATED LABEL with styled span -->
+                    <label for="linesPerBan" class="block text-sm font-medium text-gray-700">
+                        Avg. MiM Conv. per migrated account 
+                        <span class="italic font-semibold text-gray-600">(Standard: 2.3)</span>
+                    </label>
                     <input type="number" id="linesPerBan" value="2.3" step="0.1" min="0" 
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
                 </div>
