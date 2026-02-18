@@ -1,346 +1,506 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiM BAN Conversion Calculator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>MIM Comp Calculator</title>
     <style>
-        /* FIX: Ensures the body and html take up the full available vertical space within the iframe */
-        html, body { 
-            height: 100%; 
-            min-height: 100vh; /* Ensures minimum vertical space on small screens */
-            font-family: 'Inter', sans-serif; 
-            background-color: #f7f9fb; 
-        }
-        .input-card { transition: all 0.3s ease; }
-        /* Changed focus color to Magenta (pink-500) */
-        .input-card:focus-within { box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.1), 0 4px 6px -2px rgba(236, 72, 153, 0.05); }
-        input[type="number"]::-webkit-inner-spin-button, 
-        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-
-        /* New CSS for hover effect on opportunity cards */
-        .opportunity-card {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-        .opportunity-card:hover {
-            transform: scale(1.03); /* Slightly zoom in */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Add a larger shadow */
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
         
-        /* NEW: Translucent background for the main card */
-        .translucent-card {
-            background-color: rgba(255, 255, 255, 0.5); /* White at 50% opacity */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            /* Dark theme (default) */
+            --bg-primary: #000000;
+            --bg-secondary: rgba(255,255,255,0.02);
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-input: rgba(255,255,255,0.05);
+            --bg-warning: rgba(234, 179, 8, 0.1);
+            --border-color: rgba(255,255,255,0.08);
+            --border-focus: #ec4899;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.5);
+            --text-muted: rgba(255,255,255,0.4);
+            --text-warning: #fde047;
+            --accent-pink: #ec4899;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --error: #ef4444;
+            --success: #22c55e;
+            --gradient-main: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            --gradient-text: linear-gradient(135deg, #fff, var(--accent-pink));
+            --shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        [data-theme="light"] {
+            /* Light theme */
+            --bg-primary: #f8fafc;
+            --bg-secondary: rgba(255,255,255,0.8);
+            --bg-card: rgba(255,255,255,0.9);
+            --bg-input: rgba(0,0,0,0.05);
+            --bg-warning: rgba(234, 179, 8, 0.15);
+            --border-color: rgba(0,0,0,0.1);
+            --border-focus: #ec4899;
+            --text-primary: #0f172a;
+            --text-secondary: rgba(15,23,42,0.5);
+            --text-muted: rgba(15,23,42,0.4);
+            --text-warning: #854d0e;
+            --accent-pink: #db2777;
+            --accent-purple: #9333ea;
+            --accent-cyan: #0891b2;
+            --error: #dc2626;
+            --success: #16a34a;
+            --gradient-main: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            --gradient-text: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            --shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 900px;
+            background: var(--bg-secondary);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 1.4em;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 6px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-pink);
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .toggle-icon {
+            font-size: 1.1em;
+        }
+
+        .inputs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .input-box {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .input-box label {
+            display: block;
+            font-size: 0.65em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper .currency-symbol {
+            position: absolute;
+            left: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: var(--accent-pink);
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 8px 12px 8px 28px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            transition: border-color 0.2s, background 0.2s;
+            -moz-appearance: textfield;
+        }
+
+        .input-box input.no-prefix {
+            padding-left: 12px;
+        }
+
+        .input-box input::-webkit-outer-spin-button,
+        .input-box input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .input-box input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+        }
+
+        .badge {
+            display: inline;
+            padding: 2px 6px;
+            background: rgba(236,72,153,0.15);
+            border: 1px solid rgba(236,72,153,0.3);
+            border-radius: 4px;
+            font-size: 0.6em;
+            color: var(--accent-pink);
+            margin-left: 4px;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .metric {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .metric.main {
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(236,72,153,0.1), rgba(168,85,247,0.1));
+            border: 1px solid rgba(236,72,153,0.3);
+        }
+
+        .metric-label {
+            font-size: 0.65em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .metric.main .metric-value {
+            font-size: 2.4em;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-sub {
+            font-size: 0.7em;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .breakdown {
+            grid-column: span 4;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .bd-item {
+            text-align: center;
+        }
+
+        .bd-label {
+            font-size: 0.6em;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .bd-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--accent-pink);
+        }
+
+        .info-box {
+            grid-column: span 4;
+            background: rgba(168,85,247,0.08);
+            border: 1px solid rgba(168,85,247,0.25);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.7em;
+            color: var(--accent-purple);
+            margin-top: 10px;
+        }
+
+        .disclaimer {
+            grid-column: span 4;
+            background: var(--bg-warning);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 0.7em;
+            color: var(--text-warning);
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        .disclaimer strong {
+            font-weight: 700;
+        }
+
+        .footer {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.65em;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 700px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .metric.main { grid-column: span 2; }
+            .breakdown { grid-column: span 2; grid-template-columns: repeat(2, 1fr); }
+            .info-box { grid-column: span 2; }
+            .disclaimer { grid-column: span 2; }
         }
     </style>
 </head>
-<body class="p-4">
-    <!-- UPDATED: Replaced bg-white with translucent-card class --><div class="w-full max-w-4xl mx-auto translucent-card shadow-2xl rounded-xl p-6 md:p-10">
-        <!-- Header Section (Centered) --><header class="mb-8 border-b pb-4 text-center">
-            <h1 class="text-3xl font-bold text-pink-700">Magenta in Metro Conversion Calculator</h1>
-            <p class="text-gray-500 mt-1">Estimate your compensation potential by adjusting key performance metrics.</p>
-        </header>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>MIM COMP</h1>
+            <label class="theme-toggle" title="Toggle theme">
+                <input type="checkbox" id="themeSwitch">
+                <span class="toggle-icon" id="themeIcon">🌙</span>
+                <span id="themeText">Dark</span>
+            </label>
+        </div>
 
-        <!-- FIX: Changed grid behavior. The grid is now 1 column by default (mobile) and stacks correctly. 
-              It only becomes 3 columns on large screens (lg). --><main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- 1. Input Panel: Compensation Drivers --><div class="lg:col-span-1 bg-gray-50 p-6 rounded-xl shadow-inner">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Compensation Drivers</h2>
-                
-                <!-- Date Range Inputs --><div class="grid grid-cols-2 gap-4 mb-6">
-                    <!-- Date From --><div>
-                        <label for="dateFrom" class="block text-sm font-medium text-gray-700">Date From</label>
-                        <input type="date" id="dateFrom" value="2025-06-01"
-                            class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card">
-                    </div>
-                    <!-- Date To --><div>
-                        <label for="dateTo" class="block text-sm font-medium text-gray-700">Date To</label>
-                        <input type="date" id="dateTo" value="2025-06-21"
-                            class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:focus:ring-pink-500 input-card">
-                    </div>
+        <div class="inputs">
+            <div class="input-box">
+                <label>Activations</label>
+                <div class="input-wrapper">
+                    <input type="number" id="act" class="no-prefix" value="1" min="1">
                 </div>
-
-                <!-- Input Group: Total MiM Eligibility --><div class="mb-4">
-                    <label for="totalMimEligibility" class="block text-sm font-medium text-gray-700">Total MiM Eligibility</label>
-                    <div class="mt-1 relative input-card">
-                        <input type="number" id="totalMimEligibility" value="80" step="1" min="0" 
-                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
-                        <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">Activations</span>
-                    </div>
+            </div>
+            <div class="input-box">
+                <label>MRC <span class="badge">$47</span></label>
+                <div class="input-wrapper">
+                    <span class="currency-symbol">$</span>
+                    <input type="number" id="mrc" value="47" step="0.01">
                 </div>
+            </div>
+        </div>
 
-                <!-- Input Group: Avg. MiM Conv. per migrated account (2.3) -->
-                <div class="mb-4">
-                    <!-- UPDATED: Added data-tooltip-id and data-tooltip-message for custom tooltip -->
-                    <label for="linesPerBan" class="block text-sm font-medium text-gray-700" data-tooltip-id="linesPerBanInput">
-                        Avg. MiM Conv. per migrated account 
-                        <span class="italic font-semibold text-gray-600">(Standard: 2.3)</span>
-                    </label>
-                    <input type="number" id="linesPerBan" value="2.3" step="0.1" min="0" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 input-card"
-                               data-tooltip-id="linesPerBanInput">
+        <div class="grid">
+            <div class="metric main">
+                <div class="metric-label">Total Opportunity</div>
+                <div class="metric-value" id="total">$0</div>
+                <div class="metric-sub">Upfront + 23mo residual</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">Per Activation</div>
+                <div class="metric-value" id="perAct">$0</div>
+                <div class="metric-sub">300% MRC + $10 spiff + 23mo residual</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">Upfront Total</div>
+                <div class="metric-value" id="upfront">$0</div>
+                <div class="metric-sub">120-day chargeback applies</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">300% MRC Total</div>
+                <div class="metric-value" id="mrcPay">$0</div>
+                <div class="metric-sub">3 × MRC × activations</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">Dealer Spiff Total</div>
+                <div class="metric-value" id="spiffTotal">$0</div>
+                <div class="metric-sub">$10 dealer share × activations</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">Monthly Residual Total</div>
+                <div class="metric-value" id="monthlyRes">$0</div>
+                <div class="metric-sub">3% of MRC × activations</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">23mo Residual Total</div>
+                <div class="metric-value" id="totalRes">$0</div>
+                <div class="metric-sub">No chargeback • 23 months max</div>
+            </div>
+
+            <div class="breakdown">
+                <div class="bd-item">
+                    <div class="bd-label">300% MRC (total)</div>
+                    <div class="bd-value" id="bdMrc">$0</div>
                 </div>
-
-                <!-- Input Group: MiM % Conversion (The variable you control) --><div class="mb-4">
-                    <label for="mimConversionRate" class="block text-sm font-medium text-gray-700" data-tooltip-id="mimConversionRateInput">Current Eligible BAN Conversion %</label>
-                    <div class="mt-1 relative input-card">
-                        <!-- UPDATED: Added data-tooltip-id for custom tooltip and removed native title attribute -->
-                        <input type="number" id="mimConversionRate" value="13.24" step="0.01" min="0" max="100" 
-                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500"
-                               data-tooltip-id="mimConversionRateInput">
-                        <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">%</span>
-                    </div>
+                <div class="bd-item">
+                    <div class="bd-label">Dealer Spiff (total)</div>
+                    <div class="bd-value" id="bdSpiff">$0</div>
                 </div>
-
-                <h3 class="text-md font-medium mt-6 mb-3 text-gray-800">Compensation Multipliers</h3>
-
-                <!-- Input Group: Rate Plan Value --><div class="mb-4">
-                    <label for="ratePlanValue" class="block text-sm font-medium text-gray-700">Rate Plan Value $47/line dealer payout (multiline)</label>
-                    <div class="mt-1 relative input-card">
-                        <input type="number" id="ratePlanValue" value="47" step="1" min="0" 
-                               class="w-full pl-6 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
-                        <span class="absolute left-0 top-0 mt-2 ml-3 text-gray-500 text-sm">$</span>
-                    </div>
+                <div class="bd-item">
+                    <div class="bd-label">Frontline Share (total)</div>
+                    <div class="bd-value" id="bdFront" style="color:var(--error);">-$0</div>
                 </div>
-
-                <!-- Input Group: Dealer Compensation Multiplier --><div class="mb-4">
-                    <label for="dealerCompensationMultiplier" class="block text-sm font-medium text-gray-700">Standard Dealer Compensation</label>
-                    <div class="mt-1 relative input-card">
-                        <input type="number" id="dealerCompensationMultiplier" value="125" step="1" min="0" 
-                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
-                        <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">%</span>
-                    </div>
-                </div>
-
-                <!-- Input Group: Residual Multiplier (Disabled as it's a constant input) --><div class="mb-4">
-                    <label for="residualMultiplier" class="block text-sm font-medium text-gray-700">Residual (upto 23 months)</label>
-                    <div class="mt-1 relative input-card">
-                        <input type="number" id="residualMultiplier" value="3" step="0.01" min="0" 
-                               class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500" disabled>
-                        <span class="absolute right-0 top-0 mt-2 mr-3 text-gray-500 text-sm">%</span>
-                    </div>
+                <div class="bd-item">
+                    <div class="bd-label">Net Upfront (total)</div>
+                    <div class="bd-value" id="bdNet">$0</div>
                 </div>
             </div>
 
-            <!-- 2. Output Panel: Metrics and Compensation --><div class="lg:col-span-2">
-                <!-- Total Compensation (Highlighting Green for Profit) -->
-                <!-- ADDED: opportunity-card class for hover effect -->
-                <div class="bg-green-100 p-6 rounded-xl shadow-md mb-6 border-l-4 border-green-500 opportunity-card">
-                    <p class="text-lg font-medium text-green-700">Total Compensation</p>
-                    <div class="flex items-center justify-between mt-1">
-                        <span id="totalCompensation" class="text-4xl font-extrabold text-green-800">$0.00</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Metric 1: # BAN (Whole Number) --><div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                        <p class="text-sm font-medium text-gray-500"># BAN Conversions</p>
-                        <p id="numBans" class="text-2xl font-bold text-gray-800 mt-1">0</p>
-                    </div>
-
-                    <!-- Metric 2: # of Lines (Whole Number) --><div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                        <p class="text-sm font-medium text-gray-500"># of Lines Activated</p>
-                        <p id="numLines" class="text-2xl font-bold text-gray-800 mt-1">0</p>
-                    </div>
-
-                    <!-- Metric 3: Activation Comp --><div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                        <p class="text-sm font-medium text-gray-500">Activation Comp $ Earned</p>
-                        <p id="activationComp" class="text-2xl font-bold text-green-600 mt-1">$0.00</p>
-                    </div>
-
-                    <!-- Metric 4: Residual $ Amount --><div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                        <p class="text-sm font-medium text-gray-500">Residual $ Amount</p>
-                        <p id="residualAmount" class="text-2xl font-bold text-green-600 mt-1">$0.00</p>
-                    </div>
-                </div>
-
-                <!-- Potential Opportunity Section (Green for Profit) --><div class="mt-8">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Potential Opportunity Analysis</h2>
-                    <!-- FIX: On mobile, change grid-cols-3 to grid-cols-1 or grid-cols-2. 
-                          I'm using grid-cols-2 (default) and md:grid-cols-3 for better mobile density. --><div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        <!-- 10% Scenario - Added opportunity-card class --><div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center opportunity-card">
-                            <p class="text-sm font-medium text-green-700">10% Conversion</p>
-                            <p id="opp10" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
-                        </div>
-                        <!-- 15% Scenario - Added opportunity-card class --><div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center opportunity-card">
-                            <p class="text-sm font-medium text-green-700">15% Conversion</p>
-                            <p id="opp15" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
-                        </div>
-                        <!-- 20% Scenario - Added opportunity-card class --><div class="bg-green-50 p-4 rounded-lg shadow-md border border-green-300 text-center opportunity-card">
-                            <p class="text-sm font-medium text-green-700">20% Conversion</p>
-                            <p id="opp20" class="text-2xl font-bold text-green-800 mt-1">$0.00</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Disclaimer Note (UPDATED to include creator credit) --><div class="mt-8 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg">
-                    <!-- CHANGED: Removed "Note" from the heading text --><p class="text-sm font-semibold text-yellow-800">Disclaimer:</p>
-                    <p class="text-xs text-yellow-700 mt-1">
-                        This calculator provides an <strong class="font-bold">estimate</strong> of potential compensation based on the inputs provided and historical compensation factors. <strong class="font-bold">Actual earnings may vary</strong> and are subject to final audit, official compensation plans, and policy changes. This tool is for informational and planning purposes only and does not constitute a guarantee of income.
-                    </p>
-                    <!-- Creator Credit moved from footer and now uses text-right for right alignment --><p class="text-xs text-right font-medium text-yellow-800 mt-3 pt-2 border-t border-yellow-300">
-                        Created by Ishwor Tuladhar
-                    </p>
-                </div>
+            <div class="info-box">
+                💡 <strong>How it works:</strong> 300% of MRC upfront + $20 spiff (50% to dealer = $10) + 3% monthly residual for up to 23 months. All upfront payments subject to 120-day chargeback. Residuals have NO chargeback.
             </div>
-        </main>
-    </div>
 
-    <!-- Custom Tooltip Element (Hidden by default, styled for medium font) -->
-    <div id="customTooltip" 
-         class="fixed top-0 left-0 bg-gray-800 text-white p-3 rounded-lg shadow-xl pointer-events-none transition-opacity duration-150 opacity-0 z-50 text-base max-w-xs text-left">
+            <div class="disclaimer">
+                ⚠️ This calculator provides an <strong>estimate</strong> of potential compensation based on the inputs provided and historical compensation factors. <strong>Actual earnings may vary</strong> and are subject to final audit, official compensation plans, and policy changes. This tool is for informational and planning purposes only and does not constitute a guarantee of income.
+            </div>
+        </div>
+
+        <div class="footer">
+            <span>Effective: 2/1/26-2/28/26 • Smartphone Equality eligible accounts only</span>
+            <span>Created by Ishwor Tuladhar</span>
+        </div>
     </div>
 
     <script>
-        // Constants
-        // Derived factor used to calculate Residual $ Amount from Activation Comp $ (790.04 / 1431.24)
-        const RESIDUAL_FACTOR = 0.55200378; 
-        
-        // Element references
-        const elements = {
-            totalMimEligibility: document.getElementById('totalMimEligibility'),
-            linesPerBan: document.getElementById('linesPerBan'),
-            ratePlanValue: document.getElementById('ratePlanValue'),
-            dealerCompensationMultiplier: document.getElementById('dealerCompensationMultiplier'),
-            mimConversionRate: document.getElementById('mimConversionRate'),
-            
-            numBans: document.getElementById('numBans'),
-            numLines: document.getElementById('numLines'),
-            activationComp: document.getElementById('activationComp'),
-            residualAmount: document.getElementById('residualAmount'),
-            totalCompensation: document.getElementById('totalCompensation'),
-            customTooltip: document.getElementById('customTooltip'), // Reference to the new tooltip element
+        // Theme toggle functionality
+        const themeSwitch = document.getElementById('themeSwitch');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const html = document.documentElement;
 
-            // Opportunity elements
-            opp10: document.getElementById('opp10'),
-            opp15: document.getElementById('opp15'),
-            opp20: document.getElementById('opp20'),
-        };
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeUI(savedTheme);
 
-        // Tooltip messages map
-        const tooltipMessages = {
-            linesPerBanInput: "Customers migrating to postpaid average 2.3 conversions per account. This represents the typical conversion rate during the migration process.",
-            mimConversionRateInput: "Refer to the current Eligible BAN Conversion % for each store in Power BI."
-        };
-
-        // Helper function for currency formatting
-        const formatCurrency = (amount) => new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(amount);
-
-        // Function to safely get inputs, converting all percentage inputs to multipliers
-        function getInputs() {
-            // Get percentage values
-            const dealerCompPercentage = parseFloat(elements.dealerCompensationMultiplier.value) || 0;
-            const mimConversionPercentage = parseFloat(elements.mimConversionRate.value) || 0;
-            
-            return {
-                totalMimEligibility: parseFloat(elements.totalMimEligibility.value) || 0,
-                linesPerBan: parseFloat(elements.linesPerBan.value) || 0,
-                ratePlanValue: parseFloat(elements.ratePlanValue.value) || 0,
-                // CONVERSION: Standard Dealer Compensation (e.g., 125) must be divided by 100 (1.25)
-                dealerCompensationMultiplier: dealerCompPercentage / 100,
-                // CONVERSION: Current Eligible BAN Conversion (e.g., 13.24) must be divided by 100 (0.1324)
-                mimConversionRate: mimConversionPercentage / 100, 
-            };
-        }
-
-
-        // Function to calculate compensation for any given conversion rate (as a decimal), using the current inputs
-        function calculateOpportunityCompensation(conversionRate, inputs) {
-            const safeConversionRate = Math.min(1.0, Math.max(0, conversionRate));
-
-            const numBans = inputs.totalMimEligibility * safeConversionRate;
-            const numLines = numBans * inputs.linesPerBan;
-            
-            // Activation Comp $ = # of Lines * Rate Plan Value * Dealer Compensation Multiplier
-            const activationComp = numLines * inputs.ratePlanValue * inputs.dealerCompensationMultiplier;
-            
-            // Residual $ Amount = Activation Comp $ * Fixed Residual Factor 
-            const residualAmount = activationComp * RESIDUAL_FACTOR; 
-            
-            return activationComp + residualAmount;
-        }
-
-        // Main calculation function
-        function calculateCompensation() {
-            // 1. Get Inputs (Safely parsed and converted to decimals/multipliers)
-            const inputs = getInputs();
-            
-            // Limit current conversion rate to 100% (1.0)
-            const safeConversionRate = Math.min(1.0, Math.max(0, inputs.mimConversionRate));
-
-            // 2. Calculate Current Metrics and Compensation
-            const numBans = inputs.totalMimEligibility * safeConversionRate;
-            const numLines = numBans * inputs.linesPerBan;
-            const activationComp = numLines * inputs.ratePlanValue * inputs.dealerCompensationMultiplier;
-            const residualAmount = activationComp * RESIDUAL_FACTOR; 
-            const totalCompensation = activationComp + residualAmount;
-
-            // 3. Update Current UI
-            // UPDATED: Rounding to the nearest whole number and displaying as an integer
-            elements.numBans.textContent = Math.round(numBans).toFixed(0);
-            elements.numLines.textContent = Math.round(numLines).toFixed(0); 
-            elements.activationComp.textContent = formatCurrency(activationComp);
-            elements.residualAmount.textContent = formatCurrency(residualAmount);
-            elements.totalCompensation.textContent = formatCurrency(totalCompensation);
-
-            // 4. Calculate and Update Opportunity Scenarios (0.10, 0.15, 0.20 are the decimal multipliers)
-            const opp10Comp = calculateOpportunityCompensation(0.10, inputs);
-            const opp15Comp = calculateOpportunityCompensation(0.15, inputs);
-            const opp20Comp = calculateOpportunityCompensation(0.20, inputs);
-
-            elements.opp10.textContent = formatCurrency(opp10Comp);
-            elements.opp15.textContent = formatCurrency(opp15Comp);
-            elements.opp20.textContent = formatCurrency(opp20Comp);
-        }
-
-        // --- Custom Tooltip Logic ---
-        function showTooltip(e) {
-            const id = e.target.getAttribute('data-tooltip-id');
-            const tooltipContent = tooltipMessages[id];
-
-            if (tooltipContent) {
-                elements.customTooltip.textContent = tooltipContent;
-                elements.customTooltip.classList.remove('opacity-0');
-                elements.customTooltip.classList.add('opacity-100');
-            }
-            updateTooltipPosition(e);
-        }
-
-        function hideTooltip() {
-            elements.customTooltip.classList.remove('opacity-100');
-            elements.customTooltip.classList.add('opacity-0');
-        }
-
-        function updateTooltipPosition(e) {
-            // Position the tooltip 15px down and 15px to the right of the cursor
-            elements.customTooltip.style.left = `${e.pageX + 15}px`;
-            elements.customTooltip.style.top = `${e.pageY + 15}px`;
-        }
-
-        // Get all elements that need custom tooltips (labels and inputs)
-        const tooltipTargets = document.querySelectorAll('[data-tooltip-id]');
-
-        tooltipTargets.forEach(target => {
-            target.addEventListener('mouseenter', showTooltip);
-            target.addEventListener('mouseleave', hideTooltip);
-            target.addEventListener('mousemove', updateTooltipPosition);
-        });
-        // --- End Custom Tooltip Logic ---
-
-        // Add event listeners to all input fields for calculation
-        Object.values(elements).forEach(inputElement => {
-            if (inputElement && inputElement.tagName === 'INPUT') {
-                inputElement.addEventListener('input', calculateCompensation);
-            }
+        themeSwitch.addEventListener('change', function() {
+            const newTheme = this.checked ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeUI(newTheme);
         });
 
-        // Initial calculation on load to display default values
-        calculateCompensation();
+        function updateThemeUI(theme) {
+            if (theme === 'light') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+                themeSwitch.checked = true;
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+                themeSwitch.checked = false;
+            }
+        }
+
+        // Calculator logic
+        function calc() {
+            const act = parseFloat(document.getElementById('act').value) || 0;
+            const mrc = parseFloat(document.getElementById('mrc').value) || 0;
+
+            if (act <= 0 || mrc <= 0) return;
+
+            // === PER ACTIVATION CALCULATIONS ===
+            const mrcPayPerAct = 3 * mrc;
+            const dealerSpiffPerAct = 10;
+            const frontlinePerAct = 10;
+            const netUpfrontPerAct = mrcPayPerAct + dealerSpiffPerAct;
+            
+            const monthlyResPerAct = 0.03 * mrc;
+            const totalResPerAct = monthlyResPerAct * 23;
+            const perActTotal = netUpfrontPerAct + totalResPerAct;
+
+            // === TOTAL CALCULATIONS ===
+            const totalUpfront = netUpfrontPerAct * act;
+            const totalMrcPay = mrcPayPerAct * act;
+            const totalSpiff = dealerSpiffPerAct * act;
+            const totalFrontline = frontlinePerAct * act;
+            const totalMonthlyRes = monthlyResPerAct * act;
+            const allRes = totalResPerAct * act;
+            const grandTotal = totalUpfront + allRes;
+
+            // === UPDATE DISPLAY ===
+            document.getElementById('total').textContent = '$' + Math.round(grandTotal).toLocaleString();
+            document.getElementById('perAct').textContent = '$' + perActTotal.toFixed(2);
+            document.getElementById('upfront').textContent = '$' + Math.round(totalUpfront).toLocaleString();
+            document.getElementById('mrcPay').textContent = '$' + Math.round(totalMrcPay).toLocaleString();
+            document.getElementById('spiffTotal').textContent = '$' + Math.round(totalSpiff).toLocaleString();
+            document.getElementById('monthlyRes').textContent = '$' + totalMonthlyRes.toFixed(2);
+            document.getElementById('totalRes').textContent = '$' + Math.round(allRes).toLocaleString();
+            
+            document.getElementById('bdMrc').textContent = '$' + Math.round(totalMrcPay).toLocaleString();
+            document.getElementById('bdSpiff').textContent = '$' + Math.round(totalSpiff).toLocaleString();
+            document.getElementById('bdFront').textContent = '-$' + Math.round(totalFrontline).toLocaleString();
+            document.getElementById('bdNet').textContent = '$' + Math.round(totalUpfront).toLocaleString();
+        }
+
+        // Live update on input change
+        document.getElementById('act').addEventListener('input', calc);
+        document.getElementById('mrc').addEventListener('input', calc);
+
+        // Initial calculation
+        window.addEventListener('load', calc);
     </script>
 </body>
 </html>
